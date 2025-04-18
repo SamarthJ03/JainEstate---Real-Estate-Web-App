@@ -71,7 +71,7 @@ export const deleteUser = async (req,res) =>{
         await prisma.user.delete({
             where:{id}
         })
-        res.status(200).json({message})
+        res.status(200).json({message:"Deleted succesfully"})
     } catch (err) {
         console.log(err);
         res.status(500).json({message:"Failed to delete user"})

@@ -1,30 +1,35 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from 'react';
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-    const storedUser = localStorage.getItem("user");
-    let parsedUser = null;
+  const storedUser = localStorage.getItem('user');
+  let parsedUser = null;
 
-    try {
-        parsedUser = storedUser ? JSON.parse(storedUser) : null;
-    } catch (error) {
-        console.error("Error parsing user data:", error);
-    }
+  try {
+    parsedUser = storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    console.error('Error parsing user data:', error);
+  }
 
-    const [currentUser, setCurrentUser] = useState(parsedUser);
+  const [currentUser, setCurrentUser] = useState(parsedUser);
 
-    const updateUser = (data) => {
-        setCurrentUser(data);
-    };
+  const updateUser = (data) => {
+    setCurrentUser(data);
+  };
 
-    useEffect(() => {
-        localStorage.setItem("user", JSON.stringify(currentUser));
-    }, [currentUser]);
+  const logout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('user');
+  };
 
-    return (
-        <AuthContext.Provider value={{ currentUser, updateUser }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  useEffect(() => {
+    localStorage.setItem('user', JSON.stringify(currentUser));
+  }, [currentUser]);
+
+  return (
+    <AuthContext.Provider value={{ currentUser, updateUser, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
